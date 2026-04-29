@@ -19,7 +19,7 @@ pipeline {
             echo "Archiving artifacts"
             archiveArtifacts artifacts: 'output/*.txt'
         }
-        always {
+        cleanup {
             echo "Cleaning workspace"
             cleanWs()
         }
