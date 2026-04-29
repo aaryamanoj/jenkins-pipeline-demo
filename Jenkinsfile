@@ -1,23 +1,27 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        echo "Code checked out from Git"
-      }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Creating build output file"
+                sh '''
+                  mkdir output
+                  echo "Hello from Jenkins Artifact Demo" > output/app.txt
+                  date >> output/app.txt
+                '''
+            }
+        }
     }
 
-    stage('Build') {
-      steps {
-        echo "Building application"
-      }
+    post {
+        success {
+            echo "Archiving artifacts"
+            archiveArtifacts artifacts: 'output/*.txt'
+        }
+        always {
+            echo "Cleaning workspace"
+            cleanWs()
+        }
     }
-
-    stage('Test') {
-      steps {
-        echo "Running tests"
-      }
-    }
-  }
 }
